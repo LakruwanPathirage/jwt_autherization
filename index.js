@@ -6,6 +6,8 @@ const env = require("dotenv");
 //import routes
 const authRoute = require("./routes/auth");
 
+//middlewares
+app.use(express.json());
 //set middleware to routes
 app.use("/api/user", authRoute);
 
