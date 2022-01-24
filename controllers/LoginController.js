@@ -1,5 +1,6 @@
 const User = require("../schemas/user");
 const bcrypt = require("bcryptjs");
+const jsonwebtoken = require("jsonwebtoken");
 
 const autheticationLogin = async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
@@ -10,7 +11,7 @@ const autheticationLogin = async (req, res, next) => {
       .json({ data: null, message: "email is not in the system" });
   }
 
-  const validpassword = bcrypt.compare(req.body.password, user.password);
+  const validpassword = await bcrypt.compare(req.body.password, user.password);
 
   if (!validpassword) {
     return res
@@ -18,7 +19,9 @@ const autheticationLogin = async (req, res, next) => {
       .json({ data: null, message: "paasword is not valid" });
   }
 
-  return res.json({ message: "Login succesful" });
+  const token = jsonwebtoken.sign({ _id: user._id }, process.env.TOKENSECRET);
+
+  return res.header("auth-token", token).json({ message: "Login succesful" });
 };
 
 module.exports = { autheticationLogin };
