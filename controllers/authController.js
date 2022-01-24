@@ -8,6 +8,14 @@ const autheticationLogic = async (req, res, next) => {
     password: req.body.password,
   });
   try {
+    //check email is alrwady exist
+    const existemail = User.find({ email: req.body.email });
+    if (existemail)
+      return res
+        .status(400)
+        .json({ data: null, message: "this email is already exist" });
+
+    //create new user
     const saveduser = await user.save();
     res.status(200).json({
       data: saveduser,
