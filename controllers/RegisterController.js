@@ -1,6 +1,7 @@
 const User = require("../schemas/user");
 const bcrypt = require("bcryptjs");
-const autheticationLogic = async (req, res, next) => {
+
+const autheticationRegister = async (req, res, next) => {
   //check email is alrwady exist
   const existemail = await User.findOne({ email: req.body.email });
 
@@ -24,7 +25,7 @@ const autheticationLogic = async (req, res, next) => {
     //create new user
     const saveduser = await user.save();
     res.status(200).json({
-      data: saveduser,
+      data: { _id: saveduser._id },
       message: "sucess",
     });
   } catch (err) {
@@ -35,4 +36,4 @@ const autheticationLogic = async (req, res, next) => {
   }
 };
 
-module.exports = { autheticationLogic };
+module.exports = { autheticationRegister };
