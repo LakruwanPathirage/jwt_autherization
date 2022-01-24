@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const RegisterController = require("../controllers/RegisterController");
-const LoginController = require("../controllers/LoginController");
+const RegisterController = require("../../controllers/RegisterController");
+const LoginController = require("../../controllers/LoginController");
 const {
   RegisterValidation,
   LoginValidation,
-} = require("../validations/validation");
+} = require("../../validations/validation");
 
 router.post(
   "/register",
