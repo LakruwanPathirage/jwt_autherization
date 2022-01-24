@@ -1,1 +1,2 @@
-hello updated in master 1
+new updated dummy
+
