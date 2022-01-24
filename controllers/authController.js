@@ -1,20 +1,26 @@
 const User = require("../schemas/user");
-
+const bcrypt = require("bcryptjs");
 const autheticationLogic = async (req, res, next) => {
-  console.log(req.body);
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-  });
-  try {
-    //check email is alrwady exist
-    const existemail = User.find({ email: req.body.email });
-    if (existemail)
-      return res
-        .status(400)
-        .json({ data: null, message: "this email is already exist" });
+  //check email is alrwady exist
+  const existemail = await User.findOne({ email: req.body.email });
 
+  console.log(existemail);
+  if (existemail) {
+    return res
+      .status(400)
+      .json({ data: null, message: "user already registered" });
+  }
+
+  //hash the password
+  const salt = await bcrypt.genSalt();
+  const hashedpasssword = await bcrypt.hash(req.body.password, salt);
+
+  try {
+    const user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedpasssword,
+    });
     //create new user
     const saveduser = await user.save();
     res.status(200).json({
